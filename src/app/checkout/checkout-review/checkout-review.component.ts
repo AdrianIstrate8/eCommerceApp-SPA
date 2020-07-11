@@ -1,15 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { BasketService } from 'src/app/basket/basket.service';
+import { ToastrService } from 'ngx-toastr';
+import { CdkStepper } from '@angular/cdk/stepper';
 
 @Component({
   selector: 'app-checkout-review',
   templateUrl: './checkout-review.component.html',
-  styleUrls: ['./checkout-review.component.scss']
+  styleUrls: ['./checkout-review.component.scss'],
 })
 export class CheckoutReviewComponent implements OnInit {
+  @Input() appStepper: CdkStepper;
 
-  constructor() { }
+  constructor(
+    private basketService: BasketService,
+    private toastrService: ToastrService
+  ) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+
+  createPaymentIntent() {
+    this.basketService.createPaymentIntent().subscribe(
+      (response: any) => {
+        this.appStepper.next();
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
-
 }
